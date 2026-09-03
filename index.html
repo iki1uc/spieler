@@ -231,13 +231,18 @@
   .footer {
     margin-top: 16px;
     text-align: center;
-    color: #1a1a1a;
-    font-size: 7px;
-    letter-spacing: 2px;
-    border-top: 1px solid rgba(255,255,255,0.01);
-    padding-top: 8px;
+    font-size: 8px;
+    letter-spacing: 1px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 10px;
+    color: #3d5a70;
   }
-  .footer span { color: #ffd700; opacity: 0.3; }
+  .footer a {
+    color: #66ccff;
+    text-decoration: none;
+  }
+  .footer a:hover { text-decoration: underline; }
+  .footer .highlight { color: #ffd700; }
 </style>
 </head>
 <body>
@@ -380,7 +385,12 @@
 
   </div><!-- /grid3 -->
 
-  <div class="footer"><span>♟️</span> IKI1UC · RUN 3 · sli.power · Host Hub · <span>wieimmer4u</span></div>
+  <div class="footer">
+    <span class="highlight">IKI1UC · SPIELER</span> – Urheber: Ridvan (iki1uc) · 
+    <a href="https://github.com/iki1uc/spieler/blob/main/LICENSE.md" target="_blank">Lizenz</a> · 
+    <a href="https://github.com/iki1uc/spieler/blob/main/st.pauli.md" target="_blank">FC St. Pauli</a> · 
+    <a href="https://github.com/iki1uc/spieler" target="_blank">GitHub</a>
+  </div>
 </div>
 
 <script>
@@ -480,14 +490,12 @@ function narrate(msg, type='story') {
   const line = `[Tick ${NARRATIV.tick}] ${msg}`;
   NARRATIV.story.push(line);
   NARRATIV.tick++;
-  // UI update
   const box = document.getElementById('logBox');
   const recent = NARRATIV.story.slice(-30).map(line =>
     `<div class="${line.includes('Repair')||line.includes('Tor')||line.includes('Punkt')||line.includes('sli.power') ? 'event' : 'story'}">${line}</div>`
   ).join('');
   box.innerHTML = recent;
   box.scrollTop = box.scrollHeight;
-  // Tick anzeige
   document.getElementById('tickDisplay').textContent = NARRATIV.tick;
 }
 
@@ -567,7 +575,6 @@ function drawCycle(highlight = -1) {
   });
 }
 
-// RUN3 Status
 function updateRunStatus(errorRate = 0) {
   document.getElementById('errorRate').textContent = errorRate + '%';
 }
@@ -579,7 +586,6 @@ let run3Timer = null;
 let run3Running = false;
 let run3Tick = 0;
 
-// Die Story aus der RUN3 Simulation (siehe Text)
 const run3Story = [
   { tick: 0, msg: "RUN 3 aktiviert – taktischer Modus geladen.", type: "story" },
   { tick: 1, msg: "sli.power gesetzt → +6% Energie.", type: "event" },
@@ -678,14 +684,10 @@ function run3Simulation() {
   if (run3Running) return;
   run3Running = true;
   run3Tick = 0;
-  // Reset Log
   NARRATIV.story = [];
   NARRATIV.tick = 0;
   document.getElementById('logBox').innerHTML = '';
-  // Reset Energie
   resetEnergy();
-  // Reset Saison (optional)
-  // Starte Timer
   if (run3Timer) clearInterval(run3Timer);
   run3Timer = setInterval(() => {
     if (run3Tick > 90) {
@@ -694,50 +696,36 @@ function run3Simulation() {
       document.getElementById('btnRun3Start').textContent = '▶ RUN 3 SIMULATION';
       return;
     }
-    // Hole aktuellen Tick aus Story
     const entry = run3Story.find(e => e.tick === run3Tick);
     if (entry) {
       narrate(entry.msg, entry.type);
-      // Aktualisiere UI entsprechend
       if (entry.msg.includes('Slienergie')) {
         const num = parseInt(entry.msg.match(/\d+/)?.[0] || '0');
         if (!isNaN(num) && num > 0) addEnergy(num/10);
       }
       if (entry.msg.includes('Dashboard')) {
-        // Simuliere Dashboard Werte
         DASH.input = Math.floor(Math.random() * 100);
         calcDash();
         renderDashboard();
       }
-      if (entry.msg.includes('TOR')) {
-        tor();
-        renderSaison();
-      }
-      if (entry.msg.includes('Punkt')) {
-        punkt();
-        renderSaison();
-      }
+      if (entry.msg.includes('TOR')) { tor(); renderSaison(); }
+      if (entry.msg.includes('Punkt')) { punkt(); renderSaison(); }
       if (entry.msg.includes('Zyklus')) {
         const step = parseInt(entry.msg.match(/\d+/)?.[0] || '0');
         if (step >= 1 && step <= 8) drawCycle(step-1);
       }
-      // Fehlerquote aktualisieren
       const errMatch = entry.msg.match(/Fehlerquote\s*(\d+)%/);
-      if (errMatch) {
-        updateRunStatus(parseInt(errMatch[1]));
-      }
-      // Module toggeln (zufällig)
+      if (errMatch) updateRunStatus(parseInt(errMatch[1]));
       if (Math.random() > 0.7) {
         const idx = Math.floor(Math.random() * HOST.modules.length);
         HOST.modules[idx].loaded = !HOST.modules[idx].loaded;
         renderModules();
       }
-      // Energie automatisch steigern
       if (run3Tick % 3 === 0) addEnergy(3);
     }
     run3Tick++;
     document.getElementById('tickDisplay').textContent = run3Tick;
-  }, 400); // 400ms pro Tick → ca. 36 Sekunden für 90 Ticks
+  }, 400);
 }
 
 function stopRun3() {
@@ -750,13 +738,10 @@ function stopRun3() {
 // 9. EVENT-BINDING
 // ================================================================
 document.addEventListener('DOMContentLoaded', () => {
-
-  // Module
   document.getElementById('btnScan').addEventListener('click', () => { renderModules(); narrate('🔍 Scan durchgeführt.'); });
   document.getElementById('btnRepair').addEventListener('click', () => { HOST.repair(); renderModules(); narrate('👻 Ghost-L2 repariert alle Module.', 'event'); });
   document.getElementById('btnResetModules').addEventListener('click', () => { HOST.reset(); renderModules(); narrate('⟲ Module zurückgesetzt.'); });
 
-  // Dashboard
   document.getElementById('inputSlider').addEventListener('input', function() {
     DASH.input = parseInt(this.value);
     renderDashboard();
@@ -764,7 +749,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('calcBtn').addEventListener('click', () => { calcDash(); renderDashboard(); narrate(`📊 Berechnet: A=${DASH.resultA}, B=${DASH.resultB}`); });
   document.getElementById('resetDashboard').addEventListener('click', () => { resetDash(); document.getElementById('inputSlider').value = 0; renderDashboard(); narrate('⟲ Dashboard zurückgesetzt.'); });
 
-  // Saison
   document.getElementById('btnNextSpieltag').addEventListener('click', () => {
     const res = nextSpieltag();
     renderSaison();
@@ -775,7 +759,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btnPunkt').addEventListener('click', () => { punkt(); renderSaison(); narrate('🏆 Punkt!', 'event'); });
   document.getElementById('btnResetSaison').addEventListener('click', () => { resetSaison(); renderSaison(); narrate('⟲ Saison zurückgesetzt.'); });
 
-  // Zyklus Buttons
   document.querySelectorAll('[data-action]').forEach((btn, i) => {
     btn.addEventListener('click', function() {
       const step = parseInt(this.dataset.action);
@@ -785,21 +768,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // RUN3
   document.getElementById('btnRun3Start').addEventListener('click', run3Simulation);
   document.getElementById('btnRun3Stop').addEventListener('click', stopRun3);
 
-  // Slienergie
   document.getElementById('btnAddEnergy').addEventListener('click', () => { addEnergy(6); narrate('⚡ Energie +6', 'event'); });
   document.getElementById('btnResetEnergy').addEventListener('click', () => { resetEnergy(); narrate('⟲ Energie zurückgesetzt.'); });
 
-  // QDF / Player
   document.getElementById('btnSetQDF').addEventListener('click', () => { computeQDF(); renderQDF(); narrate(`📐 QDF = ${QDF.result.toFixed(2)}`); });
   document.getElementById('btnRandomQDF').addEventListener('click', () => { randomQDF(); renderQDF(); narrate(`🎲 QDF random: ${QDF.result.toFixed(2)}`); });
   document.getElementById('btnActivateAtom').addEventListener('click', () => { activateAtom(); renderPlayer(); narrate(`⚛️ ATOM aktiviert (Spin ${ATOM.spin}°)`, 'event'); });
   document.getElementById('btnActivateUni').addEventListener('click', () => { loadUni(); renderPlayer(); narrate(`🌌 UNI.spier geladen (${UNI.state})`, 'event'); });
 
-  // Initiale Anzeigen
   renderModules();
   renderDashboard();
   renderSaison();
