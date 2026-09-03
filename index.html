@@ -2,131 +2,838 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>HH – Host Hub Stargate + Ghost L2</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IKI1UC · SAISON · HOST HUB · STARgate + GHOST L2</title>
 <style>
-body {
-    background:#000;
-    color:#0f0;
-    font-family:Consolas, monospace;
-    padding:20px;
-    overflow:hidden;
-}
+  /* ================================================================
+     GLOBAL – Dark Neon, Host Hub Stil
+     ================================================================ */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #000;
+    color: #0f0;
+    font-family: 'Consolas', monospace;
+    padding: 20px;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
 
-/* Stargate verstärkt */
-#gate {
-    position:absolute;
-    right:0;
-    top:0;
-    width:50vw;
-    height:100vh;
-    border-left:4px solid #0ff;
-    background:radial-gradient(circle at center, #444, #000);
-    animation:spinGate 12s linear infinite;
-}
-@keyframes spinGate { from {transform:rotate(0deg);} to {transform:rotate(360deg);} }
+  /* Stargate – Hintergrundanimation */
+  #gate {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 50vw;
+    height: 100vh;
+    border-left: 4px solid #0ff;
+    background: radial-gradient(circle at center, #444, #000);
+    animation: spinGate 12s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @keyframes spinGate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  #vortex {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 50vw;
+    height: 100vh;
+    background: conic-gradient(from 180deg, #0ff, #000);
+    opacity: 0.35;
+    animation: vortexSpin 5s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @keyframes vortexSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+  #halo {
+    position: fixed;
+    right: 0;
+    top: 8vh;
+    width: 50vw;
+    height: 12vh;
+    background: radial-gradient(circle, rgba(255,255,255,0.5), transparent);
+    z-index: 0;
+    pointer-events: none;
+  }
 
-#vortex {
-    position:absolute;
-    right:0;
-    top:0;
-    width:50vw;
-    height:100vh;
-    background:conic-gradient(from 180deg, #0ff, #000);
-    opacity:0.35;
-    animation:vortexSpin 5s linear infinite;
-}
-@keyframes vortexSpin { from {transform:rotate(0deg);} to {transform:rotate(-360deg);} }
+  /* Hauptcontainer – über dem Stargate */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(0,255,255,0.15);
+    border-radius: 16px;
+    padding: 24px;
+  }
 
-#halo {
-    position:absolute;
-    right:0;
-    top:8vh;
-    width:50vw;
-    height:12vh;
-    background:radial-gradient(circle, rgba(255,255,255,0.5), transparent);
-}
+  h1 {
+    font-size: 24px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: #0ff;
+    text-shadow: 0 0 20px #0ff;
+    margin-bottom: 4px;
+  }
+  h1 small {
+    display: block;
+    font-size: 12px;
+    color: #3d5a70;
+    letter-spacing: 2px;
+    text-shadow: none;
+  }
+  .sub {
+    color: #3d5a70;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
 
-/* Scan Panel sichtbar */
-#scanPanel {
-    position:absolute;
-    left:20px;
-    bottom:20px;
-    width:40vw;
-    background:#111;
-    padding:20px;
-    border:2px solid #333;
-    border-radius:10px;
-    max-height:45vh;
-    overflow:auto;
-}
+  /* Grid – 3 Spalten */
+  .grid3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 1100px) { .grid3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px) { .grid3 { grid-template-columns: 1fr; } }
 
-.module { margin-bottom:10px; font-size:14px; }
-.green { color:#3f3; }
-.red { color:#f33; }
-.yellow { color:#ff0; }
-.cyan { color:#0ff; }
+  .panel {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,200,255,0.08);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .panel h2 {
+    font-size: 11px;
+    color: #3d5a70;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(0,255,255,0.05);
+    padding-bottom: 4px;
+  }
+
+  .flex { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0; }
+
+  button {
+    background: #0f0;
+    color: #000;
+    border: none;
+    padding: 4px 14px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  button:hover { background: #0ff; }
+  button.sec {
+    background: transparent;
+    color: #0f0;
+    border: 1px solid #0f0;
+  }
+  button.sec:hover { background: #0f0; color: #000; }
+  button.gold {
+    background: #ffd700;
+    color: #000;
+  }
+  button.gold:hover { background: #ffaa00; }
+  button.cyan {
+    background: transparent;
+    color: #0ff;
+    border: 1px solid #0ff;
+  }
+  button.cyan:hover { background: #0ff; color: #000; }
+
+  .status-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 10px;
+    color: #5a7a8a;
+    margin: 4px 0;
+  }
+  .status-row span {
+    background: rgba(255,255,255,0.02);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .status-row .val { font-weight: bold; }
+  .green { color: #6bffa9; }
+  .gold  { color: #ffd700; }
+  .cyan  { color: #66ccff; }
+  .pink  { color: #ff88ff; }
+
+  .module-list {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .module-list .ok { color: #6bffa9; }
+  .module-list .missing { color: #ff6b8a; }
+  .module-list .ghost { color: #66ccff; }
+
+  .log-box {
+    background: #0a0a0a;
+    padding: 8px;
+    border-radius: 4px;
+    max-height: 120px;
+    overflow-y: auto;
+    font-size: 9px;
+    border: 1px solid #111;
+    color: #3d5a70;
+  }
+  .log-box .story { color: #66ccff; }
+  .log-box .event { color: #ffd700; }
+
+  /* Dashboard – Slider, Zyklus, etc. */
+  .row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 3px 0;
+    border-bottom: 1px solid #1a1a2a;
+  }
+  .row:last-child { border-bottom: none; }
+  .row .label { color: #5a6478; }
+  .row .value { font-weight: 600; }
+
+  input[type="range"] {
+    width: 100%;
+    margin: 6px 0;
+    accent-color: #0ff;
+    background: #1a1a2a;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  #cycleCanvas {
+    width: 100%;
+    max-width: 420px;
+    display: block;
+    margin: 0 auto;
+    background: #0a0a0a;
+    border-radius: 8px;
+    border: 1px solid #1a1a2a;
+  }
+
+  /* Saison‑Panel */
+  .saison-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin: 6px 0;
+  }
+  .saison-stats .stat {
+    background: #0a0a0a;
+    padding: 6px;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid #1a1a2a;
+  }
+  .saison-stats .stat .num {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffd700;
+  }
+  .saison-stats .stat .lbl {
+    font-size: 7px;
+    color: #3d5a70;
+    text-transform: uppercase;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #1a1a1a;
+    font-size: 8px;
+    letter-spacing: 2px;
+    border-top: 1px solid rgba(255,255,255,0.01);
+    padding-top: 10px;
+  }
+  .footer span { color: #ffd700; opacity: 0.3; }
 </style>
-
-<script>
-// Ghost Level‑2
-window.GHOST = {
-    level: 2,
-
-    scanModule(name, loaded) {
-        return {
-            module: name,
-            loaded,
-            status: loaded ? "OK" : "GHOST‑REPAIR",
-            color: loaded ? "green" : "cyan"
-        };
-    },
-
-    repairMissingModules(modules) {
-        return modules.map(m => this.scanModule(m.name, m.loaded));
-    }
-};
-</script>
-
 </head>
-
 <body>
 
-<h1>HH – Host Hub</h1>
-<p>Stargate + Ghost‑Repair‑Level‑2 aktiv.</p>
-
+<!-- Stargate Elemente -->
 <div id="gate"></div>
 <div id="vortex"></div>
 <div id="halo"></div>
 
-<div id="scanPanel">
-    <h2>Pipeline‑Status</h2>
-    <div id="modules"></div>
+<div class="container">
+
+  <h1>⚡ IKI1UC · SAISON · HOST HUB</h1>
+  <h1 style="font-size:12px;margin-top:-4px;background:none;color:#3d5a70;font-weight:400;letter-spacing:2px;">
+    STARgate + GHOST‑L2 · NARRATIV · ALGORHYTMUS‑SELBST
+  </h1>
+  <div class="sub">🌌 Universum‑Saison · Fußball‑Engine · Pipeline‑Story</div>
+
+  <div class="grid3">
+
+    <!-- ==================== LINKES PANEL: HOST & GHOST ==================== -->
+    <div>
+      <div class="panel">
+        <h2>🌀 MODUL‑SCAN · GHOST‑REPAIR</h2>
+        <div class="module-list" id="moduleList">
+          <div class="missing">⏳ Scanne Module…</div>
+        </div>
+        <div class="flex" style="margin-top:6px;">
+          <button id="btnScan" class="cyan">🔍 Scan</button>
+          <button id="btnRepair" class="gold">👻 REPAIR</button>
+          <button id="btnResetModules" class="sec">⟲ Reset</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>⚙️ DASHBOARD · BERECHNUNG</h2>
+        <div class="row"><span class="label">Eingabewert (0–100)</span><span class="value" id="inputDisplay">0</span></div>
+        <input type="range" id="inputSlider" min="0" max="100" value="0">
+        <div class="row"><span class="label">Ergebnis A (÷6)</span><span class="value" id="resultA">0</span></div>
+        <div class="row"><span class="label">Ergebnis B (÷8)</span><span class="value" id="resultB">0</span></div>
+        <div class="row"><span class="label">Berechnungen &gt; 0</span><span class="value" id="hitCount">0</span></div>
+        <div class="flex">
+          <button id="calcBtn">📊 Berechnen</button>
+          <button id="resetDashboard" class="sec">⟲ Reset</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>📜 NARRATIV · LOG</h2>
+        <div class="log-box" id="logBox">⏳ System erwacht…</div>
+      </div>
+    </div>
+
+    <!-- ==================== MITTLERES PANEL: SAISON & FUSSBALL ==================== -->
+    <div>
+      <div class="panel">
+        <h2>⚽ SAISON · FUSSBALL‑ENGINE</h2>
+        <div class="saison-stats">
+          <div class="stat"><div class="lbl">Spieltag</div><div class="num" id="spieltag">1</div></div>
+          <div class="stat"><div class="lbl">Tore</div><div class="num" id="tore">0</div></div>
+          <div class="stat"><div class="lbl">Punkte</div><div class="num" id="punkte">0</div></div>
+        </div>
+        <div class="flex">
+          <button id="btnNextSpieltag" class="gold">⚽ Nächster Spieltag</button>
+          <button id="btnTor" class="cyan">⚡ Tor!</button>
+          <button id="btnPunkt" class="sec">🏆 Punkt</button>
+          <button id="btnResetSaison" class="sec">⟲ Reset</button>
+        </div>
+        <div style="margin-top:6px; font-size:9px; color:#5a7a8a;">
+          Letztes Spiel: <span id="lastGame" style="color:#66ccff;">—</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>🌀 ZYKLUS‑DIAGRAMM (8 Schritte)</h2>
+        <canvas id="cycleCanvas" width="420" height="420"></canvas>
+        <div class="flex" style="justify-content:center; margin-top:4px;">
+          <button class="sec" data-action="Schritt 1">1</button>
+          <button class="sec" data-action="Schritt 2">2</button>
+          <button class="sec" data-action="Schritt 3">3</button>
+          <button class="sec" data-action="Schritt 4">4</button>
+          <button class="sec" data-action="Schritt 5">5</button>
+          <button class="sec" data-action="Schritt 6">6</button>
+          <button class="sec" data-action="Schritt 7">7</button>
+          <button class="sec" data-action="Schritt 8">8</button>
+        </div>
+        <div style="margin-top:4px; font-size:9px; color:#5a7a8a;">
+          Letzte Aktion: <span id="lastAction">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== RECHTES PANEL: SPIELER & ENERGIE ==================== -->
+    <div>
+      <div class="panel">
+        <h2>🌟 SPIELER · UNI.spier · ATOM</h2>
+        <div class="status-row">
+          <span>🔹 ATOM: <span id="atomStatus" class="green">aktiv</span></span>
+          <span>🌀 UNI.spier: <span id="uniStatus" class="cyan">BEN</span></span>
+          <span>⚡ c+: <span id="cplusDisplay" class="pink">1.0</span></span>
+        </div>
+        <div class="status-row">
+          <span>🎯 QDF: <span id="qdfDisplay" class="gold">0</span></span>
+          <span>📦 Prefetch: <span id="prefetchDisplay">0</span></span>
+          <span>💾 Cache: <span id="cacheDisplay">0</span></span>
+        </div>
+        <div class="flex">
+          <button id="btnActivateAtom" class="gold">⚛️ ATOM aktivieren</button>
+          <button id="btnActivateUni" class="cyan">🌌 UNI.spier laden</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>⚡ SLIENERGIE · FLUSS</h2>
+        <div style="background:#0a0a0a;border-radius:4px;height:14px;width:100%;border:1px solid #1a1a2a;overflow:hidden;">
+          <div id="sliEnergyBar" style="height:100%;width:0%;background:linear-gradient(90deg,#ff00cc,#3333ff);transition:width 0.3s;font-size:6px;text-align:center;line-height:14px;color:#fff;">0%</div>
+        </div>
+        <div class="flex" style="margin-top:6px;">
+          <button id="btnAddEnergy" class="cyan">⚡ + Energie</button>
+          <button id="btnResetEnergy" class="sec">⟲ Reset</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>📈 QDF · DIMENSIONEN</h2>
+        <div class="row"><span class="label">X</span><span class="value" id="xVal">0</span></div>
+        <div class="row"><span class="label">Y</span><span class="value" id="yVal">0</span></div>
+        <div class="row"><span class="label">Z</span><span class="value" id="zVal">0</span></div>
+        <div class="row"><span class="label">Q (Quali)</span><span class="value" id="qVal">1.0</span></div>
+        <div class="flex">
+          <button id="btnSetQDF" class="gold">📐 QDF berechnen</button>
+          <button id="btnRandomQDF" class="sec">🎲 Random</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /grid3 -->
+
+  <div class="footer"><span>♟️</span> IKI1UC · SAISON · HOST HUB · STARgate · GHOST‑L2 · <span>wieimmer4u</span></div>
 </div>
 
+<!-- ================================================================
+     JAVASCRIPT – ALLE MODULE IN EINER DATEI
+     ================================================================ -->
 <script>
-(function () {
+// ================================================================
+// 1. HOST HUB · GHOST‑L2 · MODULE
+// ================================================================
+const HOST = {
+  modules: [
+    { name: "TriAxiom", loaded: false },
+    { name: "RESPO", loaded: false },
+    { name: "AXI", loaded: false },
+    { name: "TEM", loaded: false },
+    { name: "RUN8 Kernel", loaded: false }
+  ],
+  ghostLevel: 2,
 
-    const modules = [
-        { name: "TriAxiom", loaded: false },
-        { name: "RESPO", loaded: false },
-        { name: "AXI", loaded: false },
-        { name: "TEM", loaded: false },
-        { name: "RUN8 Kernel", loaded: false }
-    ];
+  scan() {
+    return this.modules.map(m => ({
+      ...m,
+      status: m.loaded ? "OK" : "GHOST‑REPAIR"
+    }));
+  },
 
-    const repaired = GHOST.repairMissingModules(modules);
+  repair() {
+    this.modules.forEach(m => { if (!m.loaded) m.loaded = true; });
+    return this.modules;
+  },
 
-    const out = repaired.map(m =>
-        `<div class="module ${m.color}">
-            <b>${m.module}:</b> ${m.status}
-        </div>`
-    ).join("");
+  reset() {
+    this.modules.forEach(m => m.loaded = false);
+    return this.modules;
+  }
+};
 
-    document.getElementById("modules").innerHTML = out;
+// ================================================================
+// 2. DASHBOARD · ZYKLUS
+// ================================================================
+const DASH = {
+  input: 0,
+  resultA: 0,
+  resultB: 0,
+  hits: 0,
+  cycleStep: -1,
 
-})();
+  calculate() {
+    this.resultA = Math.floor(this.input / 6);
+    this.resultB = Math.floor(this.input / 8);
+    if (this.resultA > 0) this.hits++;
+    return { A: this.resultA, B: this.resultB };
+  },
+
+  reset() {
+    this.input = 0;
+    this.resultA = 0;
+    this.resultB = 0;
+    this.hits = 0;
+    this.cycleStep = -1;
+  }
+};
+
+// ================================================================
+// 3. SAISON · FUSSBALL
+// ================================================================
+const SAISON = {
+  spieltag: 1,
+  tore: 0,
+  punkte: 0,
+  spiele: [],
+
+  nextSpieltag() {
+    this.spieltag++;
+    const ergebnis = `${Math.floor(Math.random()*5)}:${Math.floor(Math.random()*5)}`;
+    this.spiele.push({ tag: this.spieltag, ergebnis });
+    return { tag: this.spieltag, ergebnis };
+  },
+
+  tor() {
+    this.tore++;
+    return this.tore;
+  },
+
+  punkt() {
+    this.punkte++;
+    return this.punkte;
+  },
+
+  reset() {
+    this.spieltag = 1;
+    this.tore = 0;
+    this.punkte = 0;
+    this.spiele = [];
+  }
+};
+
+// ================================================================
+// 4. NARRATIV · ENGINE (selbsterzählend)
+// ================================================================
+const NARRATIV = {
+  story: [],
+  tick: 0,
+
+  tell(msg, type = 'story') {
+    const line = `[Tick ${this.tick}] ${msg}`;
+    this.story.push(line);
+    this.tick++;
+    return line;
+  },
+
+  logToUI() {
+    const box = document.getElementById('logBox');
+    const recent = this.story.slice(-30).map(line => `<div class="${line.includes('Repair')||line.includes('Tor')?'event':'story'}">${line}</div>`).join('');
+    box.innerHTML = recent;
+    box.scrollTop = box.scrollHeight;
+  },
+
+  narrate(event) {
+    this.tell(event);
+    this.logToUI();
+  }
+};
+
+// ================================================================
+// 5. ATOM · UNI.spier · QDF (aus den raw.js Modulen)
+// ================================================================
+const ATOM = {
+  active: false,
+  value: null,
+  charge: 0,
+  spin: 0,
+  ghostLevel: 2,
+  pipeline: "TriAxiom",
+
+  activate() {
+    this.active = true;
+    this.value = Math.floor(Math.random() * 999999);
+    this.spin = Math.floor(Math.random() * 360);
+    this.charge = 10;
+    return this;
+  }
+};
+
+const UNI = {
+  loaded: false,
+  state: "BEN", // DA / NA / BEN / DRIN
+  value: null,
+  pipelines: ["TriAxiom", "RESPO", "AXI", "TEM", "RUN8"],
+
+  load() {
+    this.loaded = true;
+    this.state = "DRIN";
+    this.value = Math.floor(Math.random() * 999999);
+    return this;
+  }
+};
+
+const QDF = {
+  x: 0, y: 0, z: 0, q: 1.0,
+  result: 0,
+
+  compute() {
+    const base = (this.x + this.y + this.z) / 3;
+    this.result = base * this.q;
+    return this.result;
+  },
+
+  random() {
+    this.x = Math.floor(Math.random() * 100);
+    this.y = Math.floor(Math.random() * 100);
+    this.z = Math.floor(Math.random() * 100);
+    this.q = 0.5 + Math.random() * 1.5;
+    return this.compute();
+  }
+};
+
+// ================================================================
+// 6. SLIENERGIE
+// ================================================================
+let sliEnergy = 0;
+const MAX_ENERGY = 100;
+
+function addSliEnergy(amount = 5) {
+  sliEnergy = Math.min(MAX_ENERGY, sliEnergy + amount);
+  updateSliUI();
+}
+
+function resetSliEnergy() {
+  sliEnergy = 0;
+  updateSliUI();
+}
+
+function updateSliUI() {
+  const bar = document.getElementById('sliEnergyBar');
+  const pct = Math.round((sliEnergy / MAX_ENERGY) * 100);
+  bar.style.width = pct + '%';
+  bar.textContent = pct + '%';
+}
+
+// ================================================================
+// 7. RENDER-FUNKTIONEN
+// ================================================================
+
+// Module anzeigen
+function renderModules() {
+  const list = document.getElementById('moduleList');
+  const scanned = HOST.scan();
+  list.innerHTML = scanned.map(m =>
+    `<div class="${m.loaded ? 'ok' : 'missing'}">
+      <b>${m.name}:</b> ${m.status}
+    </div>`
+  ).join('');
+}
+
+// Dashboard UI
+function updateDashboardUI() {
+  document.getElementById('inputDisplay').textContent = DASH.input;
+  document.getElementById('resultA').textContent = DASH.resultA;
+  document.getElementById('resultB').textContent = DASH.resultB;
+  document.getElementById('hitCount').textContent = DASH.hits;
+}
+
+// Saison UI
+function updateSaisonUI() {
+  document.getElementById('spieltag').textContent = SAISON.spieltag;
+  document.getElementById('tore').textContent = SAISON.tore;
+  document.getElementById('punkte').textContent = SAISON.punkte;
+  if (SAISON.spiele.length > 0) {
+    const last = SAISON.spiele[SAISON.spiele.length - 1];
+    document.getElementById('lastGame').textContent = `Tag ${last.tag} → ${last.ergebnis}`;
+  }
+}
+
+// QDF UI
+function updateQDFUI() {
+  document.getElementById('xVal').textContent = QDF.x;
+  document.getElementById('yVal').textContent = QDF.y;
+  document.getElementById('zVal').textContent = QDF.z;
+  document.getElementById('qVal').textContent = QDF.q.toFixed(2);
+  document.getElementById('qdfDisplay').textContent = QDF.result.toFixed(2);
+}
+
+// Atom / Uni / c+
+function updatePlayerUI() {
+  document.getElementById('atomStatus').textContent = ATOM.active ? 'aktiv' : 'inaktiv';
+  document.getElementById('atomStatus').className = ATOM.active ? 'green' : 'missing';
+  document.getElementById('uniStatus').textContent = UNI.state;
+  document.getElementById('uniStatus').className = UNI.state === 'DRIN' ? 'green' : UNI.state === 'BEN' ? 'cyan' : 'missing';
+  // c+ (globaler Multiplikator) – hier fest auf 1.0, könnte über Slider gesteuert werden
+  document.getElementById('cplusDisplay').textContent = '1.0';
+  // Prefetch / Cache (Platzhalter)
+  document.getElementById('prefetchDisplay').textContent = HOST.modules.filter(m=>m.loaded).length;
+  document.getElementById('cacheDisplay').textContent = Math.floor(Math.random()*10);
+}
+
+// Zyklus-Diagramm
+function drawCycle(highlight = -1) {
+  const canvas = document.getElementById('cycleCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height, cx = w/2, cy = h/2, r = 150;
+  ctx.clearRect(0,0,w,h);
+
+  const labels = ['1','2','3','4','5','6','7','8'];
+  const points = labels.map((_, i) => {
+    const angle = (i / labels.length) * 2 * Math.PI - Math.PI/2;
+    return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+  });
+
+  // Linien
+  ctx.strokeStyle = '#3d5a70';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  points.forEach((p, i) => {
+    const next = points[(i+1) % points.length];
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(next.x, next.y);
+  });
+  ctx.stroke();
+
+  // Knoten
+  points.forEach((p, i) => {
+    const active = i === highlight;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, active ? 22 : 16, 0, 2*Math.PI);
+    ctx.fillStyle = active ? '#0ff' : '#111';
+    ctx.fill();
+    ctx.strokeStyle = active ? '#0ff' : '#3d5a70';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = active ? '#000' : '#0f0';
+    ctx.font = '600 14px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(labels[i], p.x, p.y);
+  });
+}
+
+// ================================================================
+// 8. EVENT-BINDING & INIT
+// ================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // --- Module ---
+  document.getElementById('btnScan').addEventListener('click', () => {
+    renderModules();
+    NARRATIV.narrate('🔍 Scan durchgeführt – Module überprüft.');
+  });
+  document.getElementById('btnRepair').addEventListener('click', () => {
+    HOST.repair();
+    renderModules();
+    NARRATIV.narrate('👻 Ghost-L2 Reparatur abgeschlossen – alle Module OK.');
+  });
+  document.getElementById('btnResetModules').addEventListener('click', () => {
+    HOST.reset();
+    renderModules();
+    NARRATIV.narrate('⟲ Module zurückgesetzt – alle fehlen.');
+  });
+
+  // --- Dashboard ---
+  document.getElementById('inputSlider').addEventListener('input', function() {
+    DASH.input = parseInt(this.value);
+    updateDashboardUI();
+  });
+  document.getElementById('calcBtn').addEventListener('click', () => {
+    DASH.calculate();
+    updateDashboardUI();
+    NARRATIV.narrate(`📊 Berechnet: A=${DASH.resultA}, B=${DASH.resultB} (Eingabe=${DASH.input})`);
+  });
+  document.getElementById('resetDashboard').addEventListener('click', () => {
+    DASH.reset();
+    document.getElementById('inputSlider').value = 0;
+    updateDashboardUI();
+    NARRATIV.narrate('⟲ Dashboard zurückgesetzt.');
+  });
+
+  // --- Saison ---
+  document.getElementById('btnNextSpieltag').addEventListener('click', () => {
+    const result = SAISON.nextSpieltag();
+    updateSaisonUI();
+    NARRATIV.narrate(`⚽ Spieltag ${result.tag} → Ergebnis ${result.ergebnis}`);
+    // Zyklus-Schritt setzen (zufällig)
+    const step = Math.floor(Math.random()*8);
+    drawCycle(step);
+    document.getElementById('lastAction').textContent = `Spieltag ${result.tag}`;
+  });
+  document.getElementById('btnTor').addEventListener('click', () => {
+    SAISON.tor();
+    updateSaisonUI();
+    NARRATIV.narrate(`⚡ TOR! ${SAISON.tore} Tore insgesamt.`);
+  });
+  document.getElementById('btnPunkt').addEventListener('click', () => {
+    SAISON.punkt();
+    updateSaisonUI();
+    NARRATIV.narrate(`🏆 Punkt! ${SAISON.punkte} Punkte insgesamt.`);
+  });
+  document.getElementById('btnResetSaison').addEventListener('click', () => {
+    SAISON.reset();
+    updateSaisonUI();
+    NARRATIV.narrate('⟲ Saison zurückgesetzt.');
+  });
+
+  // --- Zyklus-Diagramm Buttons ---
+  document.querySelectorAll('[data-action]').forEach((btn, i) => {
+    btn.addEventListener('click', function() {
+      const action = this.dataset.action;
+      document.getElementById('lastAction').textContent = action;
+      const step = i; // 0..7
+      drawCycle(step);
+      NARRATIV.narrate(`🌀 Zyklus-Schritt ${step+1} aktiviert: ${action}`);
+    });
+  });
+
+  // --- ATOM / UNI ---
+  document.getElementById('btnActivateAtom').addEventListener('click', () => {
+    ATOM.activate();
+    updatePlayerUI();
+    NARRATIV.narrate(`⚛️ ATOM aktiviert – Wert: ${ATOM.value}, Spin: ${ATOM.spin}°`);
+  });
+  document.getElementById('btnActivateUni').addEventListener('click', () => {
+    UNI.load();
+    updatePlayerUI();
+    NARRATIV.narrate(`🌌 UNI.spier geladen – Zustand: ${UNI.state}, Wert: ${UNI.value}`);
+  });
+
+  // --- QDF ---
+  document.getElementById('btnSetQDF').addEventListener('click', () => {
+    const result = QDF.compute();
+    updateQDFUI();
+    NARRATIV.narrate(`📐 QDF berechnet: ${result.toFixed(2)} (X=${QDF.x}, Y=${QDF.y}, Z=${QDF.z}, Q=${QDF.q.toFixed(2)})`);
+  });
+  document.getElementById('btnRandomQDF').addEventListener('click', () => {
+    QDF.random();
+    updateQDFUI();
+    NARRATIV.narrate(`🎲 QDF random: ${QDF.result.toFixed(2)}`);
+  });
+
+  // --- Slienergie ---
+  document.getElementById('btnAddEnergy').addEventListener('click', () => {
+    addSliEnergy(10);
+    NARRATIV.narrate(`⚡ Energie +10 → ${sliEnergy}%`);
+  });
+  document.getElementById('btnResetEnergy').addEventListener('click', () => {
+    resetSliEnergy();
+    NARRATIV.narrate('⟲ Energie zurückgesetzt.');
+  });
+
+  // --- Initiale Anzeigen ---
+  renderModules();
+  updateDashboardUI();
+  updateSaisonUI();
+  updateQDFUI();
+  updatePlayerUI();
+  updateSliUI();
+  drawCycle(-1);
+  NARRATIV.narrate('🌌 IKI1UC · SAISON · HOST HUB gestartet.');
+  NARRATIV.narrate('👻 Ghost-L2 bereit. Stargate rotiert.');
+  NARRATIV.narrate('⚽ Saison‑Engine aktiv. Spieltag 1 beginnt.');
+
+  // Automatischer Tick (alle 10 Sekunden ein kleiner Fortschritt)
+  setInterval(() => {
+    // Zufällige Energieerhöhung
+    addSliEnergy(2);
+    // Zufälliger Modul-Status (nur zur Demonstration)
+    if (Math.random() > 0.7) {
+      const idx = Math.floor(Math.random() * HOST.modules.length);
+      HOST.modules[idx].loaded = !HOST.modules[idx].loaded;
+      renderModules();
+      NARRATIV.narrate(`🔄 Modul ${HOST.modules[idx].name} toggled.`);
+    }
+  }, 10000);
+});
 </script>
-
 </body>
 </html>
