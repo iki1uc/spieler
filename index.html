@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IKI1UC · RUN 3 · sli.power</title>
+<title>IKI1UC · UNO · 3hit90 · Matrix</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -46,7 +46,7 @@
   .container {
     position: relative;
     z-index: 1;
-    max-width: 1300px;
+    max-width: 1400px;
     margin: 0 auto;
     background: rgba(0,0,0,0.75);
     backdrop-filter: blur(4px);
@@ -70,13 +70,13 @@
   }
   .sub { color: #3d5a70; margin-bottom: 16px; font-size: 13px; }
 
-  .grid3 {
+  .grid4 {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 14px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 12px;
   }
-  @media (max-width: 1100px) { .grid3 { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 700px) { .grid3 { grid-template-columns: 1fr; } }
+  @media (max-width: 1200px) { .grid4 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px) { .grid4 { grid-template-columns: 1fr; } }
 
   .panel {
     background: rgba(255,255,255,0.03);
@@ -228,6 +228,52 @@
     color: #fff;
   }
 
+  /* Matrix‑Anzeige */
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin: 6px 0;
+  }
+  .matrix-cell {
+    background: #0a0a0a;
+    padding: 6px;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid #1a1a2a;
+  }
+  .matrix-cell .level {
+    font-size: 9px;
+    color: #3d5a70;
+  }
+  .matrix-cell .value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffd700;
+  }
+  .matrix-cell .mode {
+    font-size: 8px;
+    color: #66ccff;
+  }
+
+  .clock-display {
+    display: flex;
+    justify-content: space-around;
+    font-size: 10px;
+    background: #0a0a0a;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #1a1a2a;
+    margin: 4px 0;
+  }
+  .clock-display .time-type {
+    color: #5a7a8a;
+  }
+  .clock-display .time-value {
+    color: #ffd700;
+    font-weight: bold;
+  }
+
   .footer {
     margin-top: 16px;
     text-align: center;
@@ -254,15 +300,15 @@
 
 <div class="container">
 
-  <h1>⚡ IKI1UC · RUN 3 · sli.power</h1>
+  <h1>⚡ IKI1UC · UNO · 3hit90 · MATRIX</h1>
   <h1 style="font-size:12px;margin-top:-4px;background:none;color:#3d5a70;font-weight:400;letter-spacing:2px;">
-    taktisch · stabil · energie‑gesteuert
+    81 → 243 → 729 · 3 Monate = 90 Tage = 90 Ticks
   </h1>
-  <div class="sub">🌌 Host Hub · Saison · Narrativ · Ghost‑L2</div>
+  <div class="sub">🌌 Host Hub · Saison · Narrativ · Ghost‑L2 · Zeit‑Kompression</div>
 
-  <div class="grid3">
+  <div class="grid4">
 
-    <!-- LINKES PANEL: HOST, MODULE, DASHBOARD -->
+    <!-- 1. HOST / MODULE / DASHBOARD -->
     <div>
       <div class="panel">
         <h2>🌀 MODUL‑SCAN · GHOST‑REPAIR</h2>
@@ -291,11 +337,11 @@
 
       <div class="panel">
         <h2>📜 NARRATIV · LOG</h2>
-        <div class="log-box" id="logBox">⏳ RUN 3 wird initialisiert…</div>
+        <div class="log-box" id="logBox">⏳ System wird initialisiert…</div>
       </div>
     </div>
 
-    <!-- MITTLERES PANEL: SAISON + ZYKLUS -->
+    <!-- 2. SAISON + ZYKLUS + CLOCK -->
     <div>
       <div class="panel">
         <h2>⚽ SAISON · FUSSBALL</h2>
@@ -332,9 +378,29 @@
           Letzte Aktion: <span id="lastAction">—</span>
         </div>
       </div>
+
+      <!-- CLOCK / TIME Anzeige -->
+      <div class="panel">
+        <h2>⏱️ ENGINE‑CLOCK vs. REALE ZEIT</h2>
+        <div class="clock-display">
+          <span class="time-type">Engine‑Ticks:</span>
+          <span class="time-value" id="engineTicks">0</span>
+        </div>
+        <div class="clock-display">
+          <span class="time-type">Reale Zeit (ms):</span>
+          <span class="time-value" id="realTime">0</span>
+        </div>
+        <div class="clock-display">
+          <span class="time-type">Kompression (1 Tick = 1 Tag):</span>
+          <span class="time-value" id="compressionDisplay">1:1</span>
+        </div>
+        <div class="flex">
+          <button id="btnResetClock" class="sec">⟲ Clock Reset</button>
+        </div>
+      </div>
     </div>
 
-    <!-- RECHTES PANEL: RUN3, ENERGY, QDF, SPIELER -->
+    <!-- 3. RUN3 + SLIENERGIE + MATRIX -->
     <div>
       <div class="panel">
         <h2>⚡ RUN 3 · sli.power</h2>
@@ -363,6 +429,38 @@
         </div>
       </div>
 
+      <!-- 3hit90 Matrix Anzeige -->
+      <div class="panel">
+        <h2>🧮 3hit90 · MATRIX (81 → 243 → 729)</h2>
+        <div class="matrix-grid">
+          <div class="matrix-cell">
+            <div class="level">ATOM</div>
+            <div class="value" id="atomMatrix">0</div>
+            <div class="mode">Ebene 81</div>
+          </div>
+          <div class="matrix-cell">
+            <div class="level">UNI</div>
+            <div class="value" id="uniMatrix">0</div>
+            <div class="mode">Ebene 243</div>
+          </div>
+          <div class="matrix-cell">
+            <div class="level">RUN</div>
+            <div class="value" id="runMatrix">0</div>
+            <div class="mode">Ebene 729</div>
+          </div>
+        </div>
+        <div class="flex">
+          <button id="btnCalcMatrix" class="gold">📐 Matrix berechnen</button>
+          <button id="btnRandomMatrix" class="sec">🎲 Random</button>
+        </div>
+        <div style="font-size:8px;color:#5a7a8a;margin-top:4px;">
+          3hit90‑Formel: <span id="formulaDisplay" style="color:#ffd700;">3 × (Eingabe ÷ 6) × 90</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. SPIELER + QDF + LIZENZ -->
+    <div>
       <div class="panel">
         <h2>🌟 SPIELER · QDF</h2>
         <div class="status-row">
@@ -381,19 +479,70 @@
           <button id="btnActivateUni" class="pink">🌌 UNI</button>
         </div>
       </div>
+
+      <div class="panel">
+        <h2>📈 3hit90 · ERKLÄRUNG</h2>
+        <div style="font-size:9px; color:#8ab4c8; line-height:1.5;">
+          <b>3</b> = IKI1UC‑Triade (ATOM, UNI, RUN)<br>
+          <b>hit</b> = ⌊Eingabe ÷ 6⌋ (Effizienz‑Treffer)<br>
+          <b>90</b> = 90 Ticks / 90 Tage / 90 Minuten<br>
+          <b>Formel:</b> 3 × hit × 90 = Engine‑Wertung<br>
+          <b>Matrix:</b> 81 (ATOM) → 243 (UNI) → 729 (RUN)
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>⚖️ LIZENZ · FC ST. PAULI</h2>
+        <div style="font-size:8px;color:#5a7a8a;">
+          Urheber: <span class="gold">Ridvan (iki1uc)</span><br>
+          Lizenz: <a href="https://github.com/iki1uc/spieler/blob/main/LICENSE.md" target="_blank" style="color:#66ccff;">LICENSE.md</a><br>
+          Nutzungsfreigabe: <a href="https://github.com/iki1uc/spieler/blob/main/st.pauli.md" target="_blank" style="color:#66ccff;">st.pauli.md</a><br>
+          <span style="color:#3d5a70;">Unentgeltliche Nutzung &amp; Vermarktung für den Verein.</span>
+        </div>
+      </div>
     </div>
 
-  </div><!-- /grid3 -->
+  </div><!-- /grid4 -->
 
   <div class="footer">
-    <span class="highlight">IKI1UC · SPIELER</span> – Urheber: Ridvan (iki1uc) · 
-    <a href="https://github.com/iki1uc/spieler/blob/main/LICENSE.md" target="_blank">Lizenz</a> · 
-    <a href="https://github.com/iki1uc/spieler/blob/main/st.pauli.md" target="_blank">FC St. Pauli</a> · 
-    <a href="https://github.com/iki1uc/spieler" target="_blank">GitHub</a>
+    <span class="highlight">IKI1UC · UNO · 3hit90</span> – 
+    <a href="https://github.com/iki1uc/spieler" target="_blank">GitHub</a> · 
+    <span style="color:#3d5a70;">Rationalität ist offen – Zeit ist komprimiert.</span>
   </div>
 </div>
 
 <script>
+// ================================================================
+// 0. UNO-Modul (3hit90-Matrix) – integriert
+// ================================================================
+const UNO = {
+    base: 3,
+    levels: { atom: 81, uni: 243, run: 729 },
+    hitFormula(input) {
+        const hits = Math.floor(input / 6);
+        return 3 * hits * 90;
+    },
+    atomLevel(input) {
+        const f = this.hitFormula(input);
+        return { level: 81, value: f * 81, mode: "ATOM" };
+    },
+    uniLevel(input) {
+        const f = this.hitFormula(input);
+        return { level: 243, value: f * 243, mode: "UNI.spier" };
+    },
+    runLevel(input) {
+        const f = this.hitFormula(input);
+        return { level: 729, value: f * 729, mode: "RUN" };
+    },
+    fullMatrix(input) {
+        return {
+            atom: this.atomLevel(input),
+            uni: this.uniLevel(input),
+            run: this.runLevel(input)
+        };
+    }
+};
+
 // ================================================================
 // 1. HOST · GHOST‑L2 · MODULE
 // ================================================================
@@ -462,11 +611,11 @@ function activateAtom() {
   ATOM.spin = Math.floor(Math.random() * 360);
   ATOM.charge = 10;
 }
-const UNI = { loaded:false, state:"BEN", value:null };
+const UNIobj = { loaded:false, state:"BEN", value:null };
 function loadUni() {
-  UNI.loaded = true;
-  UNI.state = "DRIN";
-  UNI.value = Math.floor(Math.random() * 999999);
+  UNIobj.loaded = true;
+  UNIobj.state = "DRIN";
+  UNIobj.value = Math.floor(Math.random() * 999999);
 }
 const QDF = { x:0, y:0, z:0, q:1.0, result:0 };
 function computeQDF() {
@@ -497,6 +646,10 @@ function narrate(msg, type='story') {
   box.innerHTML = recent;
   box.scrollTop = box.scrollHeight;
   document.getElementById('tickDisplay').textContent = NARRATIV.tick;
+  // Engine-Ticks anzeigen
+  document.getElementById('engineTicks').textContent = NARRATIV.tick;
+  // Reale Zeit (simuliert)
+  document.getElementById('realTime').textContent = performance.now().toFixed(0) + ' ms';
 }
 
 // ================================================================
@@ -534,8 +687,8 @@ function renderQDF() {
 function renderPlayer() {
   document.getElementById('atomStatus').textContent = ATOM.active ? 'aktiv' : 'inaktiv';
   document.getElementById('atomStatus').className = ATOM.active ? 'green' : 'missing';
-  document.getElementById('uniStatus').textContent = UNI.state;
-  document.getElementById('uniStatus').className = UNI.state === 'DRIN' ? 'green' : UNI.state === 'BEN' ? 'cyan' : 'missing';
+  document.getElementById('uniStatus').textContent = UNIobj.state;
+  document.getElementById('uniStatus').className = UNIobj.state === 'DRIN' ? 'green' : UNIobj.state === 'BEN' ? 'cyan' : 'missing';
 }
 
 // Zyklus-Diagramm
@@ -579,8 +732,19 @@ function updateRunStatus(errorRate = 0) {
   document.getElementById('errorRate').textContent = errorRate + '%';
 }
 
+// Matrix anzeigen
+function renderMatrix(input) {
+  const matrix = UNO.fullMatrix(input);
+  document.getElementById('atomMatrix').textContent = matrix.atom.value.toFixed(0);
+  document.getElementById('uniMatrix').textContent = matrix.uni.value.toFixed(0);
+  document.getElementById('runMatrix').textContent = matrix.run.value.toFixed(0);
+  // Formel anzeigen
+  const hits = Math.floor(input / 6);
+  document.getElementById('formulaDisplay').textContent = `3 × ${hits} × 90 = ${3*hits*90}`;
+}
+
 // ================================================================
-// 8. RUN3 SIMULATION (90 Ticks)
+// 8. RUN3 SIMULATION (90 Ticks) – mit Matrix-Update
 // ================================================================
 let run3Timer = null;
 let run3Running = false;
@@ -707,6 +871,8 @@ function run3Simulation() {
         DASH.input = Math.floor(Math.random() * 100);
         calcDash();
         renderDashboard();
+        // Matrix neu berechnen
+        renderMatrix(DASH.input);
       }
       if (entry.msg.includes('TOR')) { tor(); renderSaison(); }
       if (entry.msg.includes('Punkt')) { punkt(); renderSaison(); }
@@ -725,6 +891,9 @@ function run3Simulation() {
     }
     run3Tick++;
     document.getElementById('tickDisplay').textContent = run3Tick;
+    // Engine-Ticks aktualisieren
+    document.getElementById('engineTicks').textContent = run3Tick;
+    document.getElementById('realTime').textContent = performance.now().toFixed(0) + ' ms';
   }, 400);
 }
 
@@ -738,17 +907,21 @@ function stopRun3() {
 // 9. EVENT-BINDING
 // ================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Module
   document.getElementById('btnScan').addEventListener('click', () => { renderModules(); narrate('🔍 Scan durchgeführt.'); });
   document.getElementById('btnRepair').addEventListener('click', () => { HOST.repair(); renderModules(); narrate('👻 Ghost-L2 repariert alle Module.', 'event'); });
   document.getElementById('btnResetModules').addEventListener('click', () => { HOST.reset(); renderModules(); narrate('⟲ Module zurückgesetzt.'); });
 
+  // Dashboard
   document.getElementById('inputSlider').addEventListener('input', function() {
     DASH.input = parseInt(this.value);
     renderDashboard();
+    renderMatrix(DASH.input);
   });
-  document.getElementById('calcBtn').addEventListener('click', () => { calcDash(); renderDashboard(); narrate(`📊 Berechnet: A=${DASH.resultA}, B=${DASH.resultB}`); });
-  document.getElementById('resetDashboard').addEventListener('click', () => { resetDash(); document.getElementById('inputSlider').value = 0; renderDashboard(); narrate('⟲ Dashboard zurückgesetzt.'); });
+  document.getElementById('calcBtn').addEventListener('click', () => { calcDash(); renderDashboard(); renderMatrix(DASH.input); narrate(`📊 Berechnet: A=${DASH.resultA}, B=${DASH.resultB}`); });
+  document.getElementById('resetDashboard').addEventListener('click', () => { resetDash(); document.getElementById('inputSlider').value = 0; renderDashboard(); renderMatrix(0); narrate('⟲ Dashboard zurückgesetzt.'); });
 
+  // Saison
   document.getElementById('btnNextSpieltag').addEventListener('click', () => {
     const res = nextSpieltag();
     renderSaison();
@@ -759,6 +932,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btnPunkt').addEventListener('click', () => { punkt(); renderSaison(); narrate('🏆 Punkt!', 'event'); });
   document.getElementById('btnResetSaison').addEventListener('click', () => { resetSaison(); renderSaison(); narrate('⟲ Saison zurückgesetzt.'); });
 
+  // Zyklus
   document.querySelectorAll('[data-action]').forEach((btn, i) => {
     btn.addEventListener('click', function() {
       const step = parseInt(this.dataset.action);
@@ -768,17 +942,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // RUN3
   document.getElementById('btnRun3Start').addEventListener('click', run3Simulation);
   document.getElementById('btnRun3Stop').addEventListener('click', stopRun3);
 
+  // Slienergie
   document.getElementById('btnAddEnergy').addEventListener('click', () => { addEnergy(6); narrate('⚡ Energie +6', 'event'); });
   document.getElementById('btnResetEnergy').addEventListener('click', () => { resetEnergy(); narrate('⟲ Energie zurückgesetzt.'); });
 
+  // Clock Reset
+  document.getElementById('btnResetClock').addEventListener('click', () => {
+    NARRATIV.tick = 0;
+    document.getElementById('engineTicks').textContent = '0';
+    document.getElementById('realTime').textContent = '0 ms';
+    narrate('⏱️ Clock zurückgesetzt.');
+  });
+
+  // QDF / Player
   document.getElementById('btnSetQDF').addEventListener('click', () => { computeQDF(); renderQDF(); narrate(`📐 QDF = ${QDF.result.toFixed(2)}`); });
   document.getElementById('btnRandomQDF').addEventListener('click', () => { randomQDF(); renderQDF(); narrate(`🎲 QDF random: ${QDF.result.toFixed(2)}`); });
   document.getElementById('btnActivateAtom').addEventListener('click', () => { activateAtom(); renderPlayer(); narrate(`⚛️ ATOM aktiviert (Spin ${ATOM.spin}°)`, 'event'); });
-  document.getElementById('btnActivateUni').addEventListener('click', () => { loadUni(); renderPlayer(); narrate(`🌌 UNI.spier geladen (${UNI.state})`, 'event'); });
+  document.getElementById('btnActivateUni').addEventListener('click', () => { loadUni(); renderPlayer(); narrate(`🌌 UNI.spier geladen (${UNIobj.state})`, 'event'); });
 
+  // Matrix
+  document.getElementById('btnCalcMatrix').addEventListener('click', () => {
+    renderMatrix(DASH.input);
+    narrate(`📐 Matrix berechnet: ATOM=${UNO.fullMatrix(DASH.input).atom.value}, UNI=${UNO.fullMatrix(DASH.input).uni.value}, RUN=${UNO.fullMatrix(DASH.input).run.value}`);
+  });
+  document.getElementById('btnRandomMatrix').addEventListener('click', () => {
+    const rand = Math.floor(Math.random() * 100);
+    DASH.input = rand;
+    document.getElementById('inputSlider').value = rand;
+    renderDashboard();
+    renderMatrix(rand);
+    narrate(`🎲 Matrix random mit Eingabe ${rand}`);
+  });
+
+  // Initiale Anzeigen
   renderModules();
   renderDashboard();
   renderSaison();
@@ -787,9 +987,11 @@ document.addEventListener('DOMContentLoaded', () => {
   updateEnergyUI();
   drawCycle(-1);
   updateRunStatus(0);
-  narrate('🌌 IKI1UC · RUN 3 · sli.power gestartet.');
+  renderMatrix(0);
+  narrate('🌌 IKI1UC · UNO · 3hit90 · Matrix gestartet.');
   narrate('👻 Ghost-L2 bereit. Stargate rotiert.');
   narrate('⚽ Saison‑Engine aktiv. Spieltag 1 beginnt.');
+  narrate('⏱️ Engine‑Clock: 1 Tick = 1 Tag (90 Tage = 3 Monate).');
 });
 </script>
 </body>
