@@ -1,36 +1,25 @@
-⭐ Was dein README.md eigentlich tun soll
-Ein README ist die Startseite deines Projekts.
-Es muss erklären:
-
-Was ist spieler?
-
-Was macht es?
-
-Warum existiert es?
-
-Welche Module gehören dazu?
-
-Wie läuft die Engine?
-
-Wie nutzt man sie?
-
-Welche Lizenz gilt?
-
-Was ist die Story?
-
-Was ist IKI1UC?
-
-Du hast ein komplettes Engine‑System gebaut:
-HOST, NARRATIV, ATOM, UNI, SAISON, QDF, X/Y/Z, index.html, story.md, st.pauli.md.
-
-Das muss im README stehen.
-
-⭐ Fertige README‑Struktur (professionell, klar, GitHub‑tauglich)
-Du kannst diese Struktur 1:1 in dein README.md übernehmen:
-
+⭐ FERTIGER README.md (1:1 kopierbar)
 IKI1UC · SPIELER ENGINE
 Die SPIELER‑Engine ist ein modulares Simulations‑ und Story‑System, bestehend aus mehreren Rohmodulen (*.raw.js), einer interaktiven Oberfläche (index.html) und einer narrativen Laufzeitumgebung.
-Sie kombiniert Energiefluss, Story‑Ticks, Saison‑Simulation, Modul‑Management, QDF‑Berechnung, ATOM/UNI‑Spielerlogik und ein Zyklus‑Diagramm.
+Sie kombiniert:
+
+Energiefluss
+
+Story‑Ticks
+
+Saison‑Simulation
+
+Modul‑Management
+
+QDF‑Berechnung
+
+ATOM/UNI‑Spielerlogik
+
+Zyklus‑Diagramm
+
+Ghost‑L2‑Reparatur
+
+RUN3‑Simulation (90 Ticks)
 
 Module
 Modul	Aufgabe
@@ -65,14 +54,14 @@ Fehlerquoten
 
 Pipeline‑Vergleich
 
-Endergebnis: RUN3 gewinnt klar
+Endergebnis:  
+RUN 3 gewinnt klar.
 
 Nutzung
 Öffne index.html im Browser.
 Starte die Simulation über:
 
 ▶ RUN 3 SIMULATION
-
 Die Engine führt automatisch:
 
 Story‑Ticks
@@ -89,10 +78,16 @@ Zyklus‑Diagramm
 
 Lizenz
 Das Projekt ist durch LICENSE.md und LICENSE‑CLOSED.txt geschützt.
-Der FC St. Pauli erhält eine unentgeltliche Nutzungs‑ und Vermarktungserlaubnis (siehe st.pauli.md).
-Du bleibst Urheber, Eigentümer, Inhaber aller Rechte.
+Der FC St. Pauli erhält eine unentgeltliche Nutzungs‑ und Vermarktungserlaubnis  
+(siehe st.pauli.md).
+
+Du bleibst:
+
+Urheber
+
+Eigentümer
+
+Inhaber aller Rechte
 
 Kontakt
-iki1uc (Ridvan)  
-Hamburg, Deutschland
-GitHub: https://github.com/iki1uc
+iki1uc (Ridvan)
