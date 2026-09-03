@@ -1,18 +1,28 @@
 // ================================================================
-// IKI1UC · NARRATIV · ALGORHYTMUS-SELBST
+// IKI1UC · NARRATIV HOST · ALGORHYTMUS-SELBST
 // ================================================================
 
-export const NARRATIV = {
+export const NARRATIV_HOST = {
 
     tick: 0,
     story: [],
-    modules: [],
-    ghostLevel: 2,
 
-    init(modules) {
-        this.modules = modules;
-        this.tell("HOST.HUB initialisiert.");
-        this.tell("Stargate rotiert. Ghost-L2 wacht.");
+    // Module aus HH
+    modules: [
+        { name: "TriAxiom", loaded: false },
+        { name: "RESPO", loaded: false },
+        { name: "AXI", loaded: false },
+        { name: "TEM", loaded: false },
+        { name: "RUN8 Kernel", loaded: false }
+    ],
+
+    // Dashboard-State
+    dashboard: {
+        input: 0,
+        resultA: 0,
+        resultB: 0,
+        hits: 0,
+        cycleStep: -1
     },
 
     tell(msg) {
@@ -22,17 +32,21 @@ export const NARRATIV = {
         return line;
     },
 
-    scan() {
+    // Host Hub Start
+    init() {
+        this.tell("HOST.HUB initialisiert.");
+        this.tell("Stargate rotiert. Ghost-L2 wacht.");
+    },
+
+    // HH Scan
+    scanModules() {
         this.tell("Scan beginnt…");
         this.modules.forEach(m => {
-            if (m.loaded) {
-                this.tell(`${m.name} → OK`);
-            } else {
-                this.tell(`${m.name} → FEHLT`);
-            }
+            this.tell(`${m.name} → ${m.loaded ? "OK" : "FEHLT"}`);
         });
     },
 
+    // Ghost-L2 Reparatur
     ghostRepair() {
         this.tell("Ghost-L2 aktiviert Reparatur.");
         this.modules.forEach(m => {
@@ -43,16 +57,7 @@ export const NARRATIV = {
         });
     },
 
-    cycle() {
-        this.tell("Pipeline-Zyklus läuft…");
-        this.modules.forEach(m => {
-            this.tell(`${m.name} verarbeitet Daten.`);
-        });
-    },
-
-    finish() {
-        this.tell("HOST.HUB abgeschlossen.");
-        this.tell("Alle Module OK.");
-        return this.story;
-    }
-};
+    // Dashboard Berechnung
+    calculateDashboard() {
+        const s = this.dashboard;
+        s.result
